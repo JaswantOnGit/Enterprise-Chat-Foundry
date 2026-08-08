@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+  body { width:1350px; height:900px; background:#0A1F3D; padding:50px; }
+
+  .title { color:#FFFFFF; font-size:30px; font-weight:700; margin-bottom:4px; }
+  .subtitle { color:#8FA8C9; font-size:15px; margin-bottom:34px; }
+
+  .canvas { position:relative; width:1250px; height:700px; }
+
+  .box {
+    position:absolute; background:#FFFFFF; border-radius:10px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:10px;
+  }
+  .box .icon { font-size:26px; margin-bottom:6px; }
+  .box .label { font-size:14px; font-weight:700; color:#0A1F3D; line-height:1.25; }
+  .box .sub { font-size:11px; color:#5A6B85; margin-top:3px; }
+
+  .navy-box { border-top:5px solid #0A1F3D; }
+  .amber-box { border-top:5px solid #E8A33D; }
+  .green-box { border-top:5px solid #2E8B57; }
+
+  /* positions */
+  .user       { left:0px;   top:300px; width:130px; height:110px; }
+  .webapp     { left:190px; top:300px; width:160px; height:110px; }
+  .playground { left:420px; top:300px; width:190px; height:110px; }
+  .gpt5       { left:465px; top:60px;  width:170px; height:100px; }
+  .filesearch { left:700px; top:150px; width:170px; height:110px; }
+  .websearch  { left:700px; top:440px; width:170px; height:110px; }
+  .vectorindex{ left:940px; top:150px; width:200px; height:110px; }
+  .sourcedocs { left:940px; top:440px; width:200px; height:110px; }
+
+  svg.arrows { position:absolute; top:0; left:0; width:1250px; height:700px; overflow:visible; }
+  .arrow { stroke:#E8A33D; stroke-width:2.5; fill:none; marker-end:url(#arrowhead); }
+  .arrow-dashed { stroke:#8FA8C9; stroke-width:2; fill:none; stroke-dasharray:5,5; marker-end:url(#arrowhead-dashed); }
+  .arrow-green { stroke:#2E8B57; stroke-width:2.5; fill:none; marker-end:url(#arrowhead-green); }
+
+  .flow-label { position:absolute; font-size:10.5px; color:#B7C6DE; font-weight:600; }
+
+  .legend { position:absolute; bottom:0; left:0; display:flex; gap:26px; }
+  .legend-item { display:flex; align-items:center; gap:8px; font-size:12px; color:#B7C6DE; }
+  .swatch { width:14px; height:14px; border-radius:3px; }
+
+  .footer { position:absolute; bottom:14px; right:0; font-size:11px; color:#5A6B85; }
+</style>
+</head>
+<body>
+
+  <div class="title">Enterprise Chat Web App — RAG Architecture</div>
+  <div class="subtitle">Microsoft Foundry · GPT-5-mini Agent · File Search Grounding · Enterprise Vector Index</div>
+
+  <div class="canvas">
+    <svg class="arrows">
+      <defs>
+        <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <polygon points="0 0, 7 3, 0 6" fill="#E8A33D" />
+        </marker>
+        <marker id="arrowhead-dashed" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <polygon points="0 0, 7 3, 0 6" fill="#8FA8C9" />
+        </marker>
+        <marker id="arrowhead-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <polygon points="0 0, 7 3, 0 6" fill="#2E8B57" />
+        </marker>
+      </defs>
+
+      <!-- User -> Web App -->
+      <path class="arrow" d="M130,355 L190,355" />
+      <!-- Web App -> Playground/Agent -->
+      <path class="arrow" d="M350,355 L420,355" />
+      <!-- Agent -> GPT-5-mini (up) -->
+      <path class="arrow" d="M515,300 L515,160" />
+      <!-- Agent -> File Search -->
+      <path class="arrow" d="M610,330 L700,225" />
+      <!-- Agent -> Web Search (fallback) -->
+      <path class="arrow-dashed" d="M610,380 L700,470" />
+      <!-- File Search -> Vector Index -->
+      <path class="arrow" d="M870,200 L940,200" />
+      <!-- Vector Index -> Source Docs -->
+      <path class="arrow" d="M1040,260 L1040,440" />
+      <!-- Response path back (green, grounded answer w/ citation) -->
+      <path class="arrow-green" d="M940,290 C 750,340 500,470 350,395" />
+    </svg>
+
+    <div class="box navy-box user">
+      <div class="icon">👤</div>
+      <div class="label">User</div>
+      <div class="sub">Employee query</div>
+    </div>
+
+    <div class="box navy-box webapp">
+      <div class="icon">🌐</div>
+      <div class="label">Agent Web Preview</div>
+      <div class="sub">Published chat UI</div>
+    </div>
+
+    <div class="box navy-box playground">
+      <div class="icon">💬</div>
+      <div class="label">enterprise-agent</div>
+      <div class="sub">Foundry Agent · chat-web-app01</div>
+    </div>
+
+    <div class="box amber-box gpt5">
+      <div class="icon">🧠</div>
+      <div class="label">GPT-5-mini</div>
+      <div class="sub">Global Standard deployment</div>
+    </div>
+
+    <div class="box green-box filesearch">
+      <div class="icon">🔍</div>
+      <div class="label">File Search Tool</div>
+      <div class="sub">Primary grounding path</div>
+    </div>
+
+    <div class="box navy-box websearch">
+      <div class="icon">🌍</div>
+      <div class="label">Web Search Tool</div>
+      <div class="sub">Fallback only — flagged risk</div>
+    </div>
+
+    <div class="box green-box vectorindex">
+      <div class="icon">🗂️</div>
+      <div class="label">enterprise-index</div>
+      <div class="sub">index_mango_whale · 341.78 KB</div>
+    </div>
+
+    <div class="box green-box sourcedocs">
+      <div class="icon">📄</div>
+      <div class="label">Source Documents</div>
+      <div class="sub">product_info_*.md (approved)</div>
+    </div>
+
+    <div class="flow-label" style="top:335px; left:145px;">query</div>
+    <div class="flow-label" style="top:335px; left:370px;">route</div>
+    <div class="flow-label" style="top:180px; left:530px;">reasoning</div>
+    <div class="flow-label" style="top:255px; left:635px;">grounded call</div>
+    <div class="flow-label" style="top:440px; left:635px;">ungrounded fallback</div>
+    <div class="flow-label" style="top:200px; left:885px;">retrieve</div>
+    <div class="flow-label" style="top:340px; left:1050px;">chunk + embed</div>
+    <div class="flow-label" style="top:420px; left:660px;">answer + citation</div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="swatch" style="background:#0A1F3D;"></div>Platform / Orchestration</div>
+      <div class="legend-item"><div class="swatch" style="background:#E8A33D;"></div>Model Layer</div>
+      <div class="legend-item"><div class="swatch" style="background:#2E8B57;"></div>Grounded Data Path</div>
+    </div>
+
+    <div class="footer">Deploy an Enterprise Chat Web App — Microsoft Foundry</div>
+  </div>
+
+</body>
+</html>
