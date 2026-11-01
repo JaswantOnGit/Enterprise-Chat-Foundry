@@ -1,12 +1,12 @@
 # Enterprise Chat Web App — Microsoft Foundry (RAG-Grounded Agent)
 
-A retrieval-augmented AI agent built on Microsoft Foundry (GPT-5-mini + File Search) that answers employee questions using only approved internal documentation — with every claim traceable to a source file. Delivered and documented using an AI Project Management governance framework (Charter, RAID, RACI, Quality Gates, UAT).
+A retrieval-augmented AI agent built on Microsoft Foundry (GPT-5-mini + File Search) that answers employee questions using only approved internal documentation — with every claim traceable to a source file.
 
 ![Architecture Diagram](architecture/architecture-diagram.png)
 
 ## Why this exists
 
-Generic LLM responses can't be trusted for internal product or policy questions — they hallucinate, cite the wrong brand, or quote outdated pricing. This project grounds the agent in a controlled `enterprise-index` vector store so every answer is verifiable.
+Generic LLM responses can't be trusted for internal product or policy questions — they hallucinate, cite the wrong brand, or quote outdated pricing. This project grounds the agent in a controlled internal corpus so the answer is answerable, attributable, and auditable.
 
 ## What was built
 
@@ -55,7 +55,7 @@ enterprise-chat-foundry/
     └── README.md                      # placeholder — see note below
 ```
 
-> **Note:** The indexed source documents (`product_info_*.md`, the Contoso Trek retail sample data) weren't part of this upload, so `/product-info` currently only contains a placeholder explaining what belongs there. See that file for how to complete it.
+> **Note:** The indexed source documents (`product_info_*.md`, the Contoso Trek retail sample data) weren't part of this upload, so `/product-info` currently only contains a placeholder explaining the intent and expected data structure.
 
 ## Governance approach
 
@@ -69,7 +69,7 @@ This build was run the way a production rollout would be — not just "does the 
 
 ## Key finding worth calling out
 
-The baseline test didn't just return "I don't know" — it confidently answered with the **wrong brand and wrong currency**, sourced from the open web. That's logged as RAID risk **R2** and is exactly the kind of silent failure mode a Quality Gate process exists to catch before it reaches production.
+The baseline test didn't just return "I don't know" — it confidently answered with the **wrong brand and wrong currency**, sourced from the open web. That's logged as RAID risk **R2** and is exactly why grounding matters.
 
 ## Next steps for a real production rollout
 
@@ -80,4 +80,4 @@ The baseline test didn't just return "I don't know" — it confidently answered 
 
 ---
 
-*Built as a hands-on lab (K21Academy — "Deploy an Enterprise Chat Web App using Microsoft Foundry") and delivered through an AI Project Management lens by Jaswant Singh, PMP, AWS Certified AI Practitioner.*
+*Built as a hands-on lab and delivered through an AI Project Management lens by Jaswant Singh, PMP, AWS Certified AI Practitioner.*
